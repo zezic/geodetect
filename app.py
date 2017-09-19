@@ -27,6 +27,7 @@ def get_city_by_ip(my_ip):
             city = cities.get(city_id)
             cache[my_ip] = city
             return city
+    cache[my_ip] = 'Москва'
 
 app = Flask(__name__)
 
@@ -35,6 +36,15 @@ def get_city():
     my_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     city = get_city_by_ip(my_ip)
     print('IP:', my_ip, 'CITY:', city)
+    if city:
+        return city
+    else:
+        return 'Москва'
+
+@app.route('/api/my_city/<my_ip>')
+def get_city_custom(my_ip):
+    city = get_city_by_ip(my_ip)
+    print('CUSTOM IP:', my_ip, 'CITY:', city)
     if city:
         return city
     else:
